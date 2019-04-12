@@ -1,0 +1,52 @@
+# Travis example for Modern C++ by Rafał Pocztarski
+# For more languages and info see:
+# https://github.com/rsp/travis-hello#readme
+#
+# It also has been inspired from :
+# https://codeburst.io/getting-started-with-travis-ci-f3223082f256
+
+sudo: true
+language: c
+
+matrix:
+    include:
+            - os: linux
+              #dist: xenial
+              dist: trusty
+              addons:
+                  apt:
+                      sources:
+                      - ubuntu-toolchain-r-test
+                      - llvm-toolchain-precise-3.8
+                      packages:
+                      - g++-7
+                      - clang-3.8
+                  sonarcloud:
+                      organization: "unice-etu-gom-github"
+
+before_install:
+    - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then echo "$(pwd)";  sudo bash ./scripts/dependencies-install-linux.sh ; fi;
+
+
+#compiler:
+#  - gcc
+##  - clang
+
+## install:
+## - "[ $CXX = g++ ] && export CXX=g++-6 || true"
+## - "[ $CXX = clang++ ] && export CXX=clang++-3.8 || true"
+
+
+script:
+  - make
+#  - make tests
+#  - make run-tests-auto
+#  - make distclean
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then build-wrapper-linux-x86-64 --out-dir bw-output make target tests;fi;
+#  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sonar-scanner -X; fi;
+
+
+
+cache:
+    directories:
+        - '$HOME/.sonar/cache'
